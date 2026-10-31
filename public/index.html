@@ -10,7 +10,39 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <div id="authView" class="auth-shell">
+      <div class="auth-card">
+        <div class="brand-box auth-brand">
+          <div class="brand-mark">T</div>
+          <div>
+            <h1>TechFlow</h1>
+            <p>Sistema de assistência técnica</p>
+          </div>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <label>
+            Usuário
+            <input id="username" type="text" placeholder="admin" required />
+          </label>
+          <label>
+            Senha
+            <input id="password" type="password" placeholder="••••••••" required />
+          </label>
+          <button class="primary-btn" type="submit">Entrar</button>
+        </form>
+
+        <div id="loginError" class="auth-error" aria-live="polite"></div>
+
+        <div class="auth-hint">
+          <strong>Credenciais de demonstração:</strong><br />
+          Usuário: admin<br />
+          Senha: admin123
+        </div>
+      </div>
+    </div>
+
+    <div id="appView" class="app-shell hidden">
       <aside class="sidebar">
         <div class="brand-box">
           <div class="brand-mark">T</div>
@@ -27,6 +59,8 @@
           <button class="nav-item">Ordens</button>
           <button class="nav-item">Estoque</button>
         </nav>
+
+        <button id="logoutBtn" class="logout-btn">Sair</button>
       </aside>
 
       <main class="content">
@@ -37,6 +71,7 @@
           </div>
           <div class="topbar-actions">
             <span id="companyName">Carregando...</span>
+            <span id="userBadge" class="user-badge">Usuário</span>
           </div>
         </header>
 

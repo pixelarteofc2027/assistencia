@@ -1,12 +1,14 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'db.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const sessions = new Map();
 
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
@@ -92,6 +94,22 @@ function ensureDataFile() {
         { id: 1, name: 'Tela Dell Inspiron 15', quantity: 2, price: 320 },
         { id: 2, name: 'Bateria Samsung A54', quantity: 1, price: 180 },
         { id: 3, name: 'Teclado Logitech K380', quantity: 6, price: 120 }
+      ],
+      users: [
+        {
+          id: 1,
+          username: 'admin',
+          password: 'admin123',
+          name: 'Administrador',
+          role: 'admin'
+        },
+        {
+          id: 2,
+          username: 'tecnico',
+          password: 'tecnico123',
+          name: 'Técnico',
+          role: 'technician'
+        }
       ]
     };
 
@@ -112,16 +130,77 @@ function makeId(list) {
   return list.length ? Math.max(...list.map(item => Number(item.id || 0))) + 1 : 1;
 }
 
+function normalizeToken(rawToken) {
+  if (!rawToken) return null;
+  return rawToken.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
+}
+
+function authenticate(req, res, next) {
+  const token = normalizeToken(req.headers.authorization);
+
+  if (!token || !sessions.has(token)) {
+    return res.status(401).json({ message: 'Não autorizado. Faça login para continuar.' });
+  }
+
+  req.user = sessions.get(token);
+  next();
+}
+
+function createSession(user) {
+  const token = crypto.randomBytes(24).toString('hex');
+  sessions.set(token, { id: user.id, username: user.username, name: user.name, role: user.role });
+  return token;
+}
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body || {};
+
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Usuário e senha são obrigatórios.' });
+  }
+
+  const data = readData();
+  const existingUser = (data.users || []).find(
+    user => user.username === username && user.password === password
+  );
+
+  if (!existingUser) {
+    return res.status(401).json({ message: 'Credenciais inválidas.' });
+  }
+
+  const token = createSession(existingUser);
+
+  return res.json({
+    token,
+    user: {
+      id: existingUser.id,
+      username: existingUser.username,
+      name: existingUser.name,
+      role: existingUser.role
+    }
+  });
+});
+
+app.get('/api/me', authenticate, (req, res) => {
+  res.json(req.user);
+});
+
+app.post('/api/logout', authenticate, (req, res) => {
+  const token = normalizeToken(req.headers.authorization);
+  sessions.delete(token);
+  res.json({ success: true });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', app: 'TechFlow' });
 });
 
-app.get('/api/company', (req, res) => {
+app.get('/api/company', authenticate, (req, res) => {
   const data = readData();
   res.json(data.company);
 });
 
-app.get('/api/dashboard', (req, res) => {
+app.get('/api/dashboard', authenticate, (req, res) => {
   const data = readData();
   const pendingOrders = data.orders.filter(order => order.status !== 'Finalizado').length;
   const totalValue = data.orders.reduce((sum, order) => sum + Number(order.total || 0), 0);
@@ -151,12 +230,12 @@ app.get('/api/dashboard', (req, res) => {
   });
 });
 
-app.get('/api/clients', (req, res) => {
+app.get('/api/clients', authenticate, (req, res) => {
   const data = readData();
   res.json(data.clients);
 });
 
-app.post('/api/clients', (req, res) => {
+app.post('/api/clients', authenticate, (req, res) => {
   const data = readData();
   const { name, phone, email } = req.body;
 
@@ -177,12 +256,12 @@ app.post('/api/clients', (req, res) => {
   res.status(201).json(newClient);
 });
 
-app.get('/api/equipment', (req, res) => {
+app.get('/api/equipment', authenticate, (req, res) => {
   const data = readData();
   res.json(data.equipment);
 });
 
-app.post('/api/equipment', (req, res) => {
+app.post('/api/equipment', authenticate, (req, res) => {
   const data = readData();
   const { clientId, brand, model, serial, issue, status } = req.body;
 
@@ -206,12 +285,12 @@ app.post('/api/equipment', (req, res) => {
   res.status(201).json(newEquipment);
 });
 
-app.get('/api/orders', (req, res) => {
+app.get('/api/orders', authenticate, (req, res) => {
   const data = readData();
   res.json(data.orders);
 });
 
-app.post('/api/orders', (req, res) => {
+app.post('/api/orders', authenticate, (req, res) => {
   const data = readData();
   const { clientId, equipmentId, title, status, priority, total } = req.body;
 
@@ -236,12 +315,12 @@ app.post('/api/orders', (req, res) => {
   res.status(201).json(newOrder);
 });
 
-app.get('/api/inventory', (req, res) => {
+app.get('/api/inventory', authenticate, (req, res) => {
   const data = readData();
   res.json(data.inventory);
 });
 
-app.post('/api/inventory', (req, res) => {
+app.post('/api/inventory', authenticate, (req, res) => {
   const data = readData();
   const { name, quantity, price } = req.body;
 

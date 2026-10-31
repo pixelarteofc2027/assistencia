@@ -14,6 +14,7 @@
   --green-soft: #dff8ee;
   --orange-soft: #fff0dc;
   --purple-soft: #f0e9ff;
+  --danger: #d14343;
 }
 
 body {
@@ -27,6 +28,75 @@ button, input, select {
   font: inherit;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #eff5ff, #f5f2ff);
+}
+
+.auth-card {
+  width: min(100%, 420px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(31, 111, 235, 0.08);
+}
+
+.auth-brand {
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.auth-form input {
+  background: #f9fbff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  min-height: 46px;
+  padding: 10px 12px;
+  color: var(--text);
+}
+
+.auth-error {
+  min-height: 20px;
+  color: var(--danger);
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.auth-hint {
+  margin-top: 18px;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--muted);
+  background: #f6f9ff;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -37,13 +107,15 @@ button, input, select {
   background: #0f172a;
   color: #e9eefb;
   padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .brand-box {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 32px;
 }
 
 .brand-mark {
@@ -71,6 +143,7 @@ button, input, select {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 28px;
 }
 
 .nav-item {
@@ -86,6 +159,16 @@ button, input, select {
 .nav-item.active {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(96, 165, 250, 0.25);
+}
+
+.logout-btn {
+  background: rgba(209, 67, 67, 0.12);
+  border: 1px solid rgba(209, 67, 67, 0.25);
+  color: #ffd5d5;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .content {
@@ -113,11 +196,22 @@ button, input, select {
 }
 
 .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 12px 18px;
   font-weight: 600;
+}
+
+.user-badge {
+  background: #ecf2ff;
+  color: var(--primary);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
 }
 
 .stats-grid {

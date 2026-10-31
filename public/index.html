@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechFlow | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-box">
+          <div class="brand-mark">T</div>
+          <div>
+            <h1>TechFlow</h1>
+            <p>Assistência técnica</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active">Dashboard</button>
+          <button class="nav-item">Clientes</button>
+          <button class="nav-item">Equipamentos</button>
+          <button class="nav-item">Ordens</button>
+          <button class="nav-item">Estoque</button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Painel geral</p>
+            <h2>Resumo operacional</h2>
+          </div>
+          <div class="topbar-actions">
+            <span id="companyName">Carregando...</span>
+          </div>
+        </header>
+
+        <section class="stats-grid" id="statsGrid">
+          <article class="stat-card accent-blue">
+            <span>Clientes</span>
+            <strong id="totalClients">0</strong>
+          </article>
+          <article class="stat-card accent-green">
+            <span>Equipamentos</span>
+            <strong id="totalEquipment">0</strong>
+          </article>
+          <article class="stat-card accent-orange">
+            <span>Ordens</span>
+            <strong id="totalOrders">0</strong>
+          </article>
+          <article class="stat-card accent-purple">
+            <span>Em aberto</span>
+            <strong id="pendingOrders">0</strong>
+          </article>
+        </section>
+
+        <section class="panel-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Nova ordem</h3>
+            </div>
+
+            <form id="orderForm" class="form-grid">
+              <label>
+                Cliente
+                <select id="orderClientId"></select>
+              </label>
+              <label>
+                Equipamento
+                <select id="orderEquipmentId"></select>
+              </label>
+              <label class="full-width">
+                Título
+                <input id="orderTitle" type="text" placeholder="Ex: Troca de teclado" />
+              </label>
+              <label>
+                Status
+                <select id="orderStatus">
+                  <option value="Em andamento">Em andamento</option>
+                  <option value="Aguardando peça">Aguardando peça</option>
+                  <option value="Finalizado">Finalizado</option>
+                </select>
+              </label>
+              <label>
+                Prioridade
+                <select id="orderPriority">
+                  <option value="Baixa">Baixa</option>
+                  <option value="Média">Média</option>
+                  <option value="Alta">Alta</option>
+                </select>
+              </label>
+              <label>
+                Valor
+                <input id="orderTotal" type="number" min="0" step="0.01" value="0" />
+              </label>
+              <button class="primary-btn full-width" type="submit">Salvar ordem</button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Adicionar cliente</h3>
+            </div>
+
+            <form id="clientForm" class="form-grid compact-form">
+              <label class="full-width">
+                Nome
+                <input id="clientName" type="text" placeholder="Nome do cliente" />
+              </label>
+              <label>
+                Telefone
+                <input id="clientPhone" type="text" placeholder="(11) 99999-9999" />
+              </label>
+              <label>
+                E-mail
+                <input id="clientEmail" type="email" placeholder="cliente@email.com" />
+              </label>
+              <button class="primary-btn full-width" type="submit">Cadastrar cliente</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel-grid bottom-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Últimas ordens</h3>
+            </div>
+            <div id="ordersList" class="list-table"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Estoque</h3>
+            </div>
+            <div id="inventoryList" class="list-table"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

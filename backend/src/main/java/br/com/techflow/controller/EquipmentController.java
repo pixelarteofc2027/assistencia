@@ -5,6 +5,7 @@ import br.com.techflow.repository.EquipmentRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +22,13 @@ public class EquipmentController {
     }
 
     @GetMapping("/equipment")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public List<Equipment> findAll() {
         return equipmentRepository.findAll();
     }
 
     @PostMapping("/equipment")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<Equipment> create(@Valid @RequestBody EquipmentRequest request) {
         Equipment equipment = new Equipment(
                 request.brand(),

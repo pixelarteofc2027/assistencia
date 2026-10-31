@@ -17,3 +17,9 @@ spring:
 
 server:
   port: 8080
+
+techflow:
+  security:
+    admin:
+      username: ${TECHFLOW_ADMIN_USERNAME:}
+      password: ${TECHFLOW_ADMIN_PASSWORD:}

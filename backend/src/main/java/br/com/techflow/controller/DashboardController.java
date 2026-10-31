@@ -3,6 +3,7 @@ package br.com.techflow.controller;
 import br.com.techflow.repository.CustomerRepository;
 import br.com.techflow.repository.EquipmentRepository;
 import br.com.techflow.repository.ServiceOrderRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public Map<String, Long> dashboard() {
         return Map.of(
                 "customers", customerRepository.count(),

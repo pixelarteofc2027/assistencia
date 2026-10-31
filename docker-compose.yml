@@ -21,6 +21,8 @@ services:
       DB_URL: jdbc:postgresql://db:5432/techflow
       DB_USERNAME: techflow
       DB_PASSWORD: change-me-local-only
+      TECHFLOW_ADMIN_USERNAME: admin
+      TECHFLOW_ADMIN_PASSWORD: SenhaForte!123
     ports:
       - "8080:8080"
     depends_on:
@@ -29,6 +31,8 @@ services:
 
   frontend:
     build: ./frontend
+    environment:
+      VITE_API_URL: http://localhost:8080/api
     ports:
       - "5173:5173"
     depends_on:

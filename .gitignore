@@ -1,7 +1,22 @@
-node_modules/
-.env
-.DS_Store
-npm-debug.log*
-coverage/
-.vite/
+# Java
+target/
+*.class
 *.log
+.idea/
+.vscode/
+*.iml
+
+# Node
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+uploads/*
+!uploads/.gitkeep

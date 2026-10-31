@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: techflow
+      POSTGRES_USER: techflow
+      POSTGRES_PASSWORD: change-me-local-only
+    ports:
+      - "5432:5432"
+    volumes:
+      - techflow_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U techflow -d techflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/techflow
+      DB_USERNAME: techflow
+      DB_PASSWORD: change-me-local-only
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  techflow_db:
